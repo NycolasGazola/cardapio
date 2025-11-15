@@ -1,0 +1,445 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@400;700;900&display=swap');
+
+:root {
+    --bg: #1a1a1a;
+    --card: #2a2a2a;
+    --accent: #ff0000;
+    --muted: #e0e0e0;
+    --titulo-cor: #ff0000;
+    --subtitulo-cor: #fffb00;
+    --preco-fundo: #ffc400;
+    font-family: 'Roboto', sans-serif;
+}
+html,body{
+    height:100%;
+    margin:0;
+    background:var(--bg);
+    color:var(--muted)
+}
+
+.app{
+    max-width:1200px;
+    margin:18px auto;
+    padding:18px;
+    /* fundo do cardápio: imagem com overlay escuro para manter legibilidade */
+    background-color: var(--bg);
+    /* overlay reduzido para destacar mais a imagem de fundo na tela */
+    background-image: linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url('imagem/fundo.png');
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+}
+
+header{
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    display:flex;
+    flex-direction:column; /* empilha logo + título */
+    justify-content:center; /* centraliza horizontal/verticalmente */
+    align-items:center;
+    gap:10px;
+    margin-bottom:12px; /* mais próximo da primeira seção */
+    padding:36px 20px; /* diminuir levemente para caber melhor na página */
+    background: linear-gradient(135deg, rgba(255,0,0,0.06) 0%, rgba(255,196,0,0.04) 50%, rgba(0,0,0,0.35) 100%);
+    border-radius:12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.32);
+}
+
+/* camada animada sutil por cima do fundo */
+header::before{
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+    mix-blend-mode: overlay;
+    z-index: 0;
+    animation: header-pan 10s linear infinite;
+}
+
+/* manchas de cor decorativas (ribbon) */
+header::after{
+    content: '';
+    position: absolute;
+    left: -40%;
+    top: -30%;
+    width: 200%;
+    height: 60%;
+    background: radial-gradient(circle at 15% 20%, rgba(255,235,0,0.06), transparent 18%), radial-gradient(circle at 85% 80%, rgba(255,0,0,0.04), transparent 25%);
+    transform: rotate(-8deg);
+    z-index: 0;
+    animation: ribbon-slow 18s linear infinite;
+}
+
+/* garantir que conteúdo do header fique sobre as camadas decorativas */
+header > *{ position: relative; z-index: 2 }
+
+h1{
+    margin:0;
+    font-family:'Bebas Neue',cursive;
+    font-size:3.2em; /* aumentar título */
+    color:var(--titulo-cor)
+}
+
+/* brilho suave e animação do título */
+h1{ animation: title-glow 3s ease-in-out infinite alternate; }
+
+/* faixa decorativa animada abaixo do título */
+.header-decor{
+    width:140px;
+    height:6px;
+    border-radius:6px;
+    margin-top:8px;
+    background: linear-gradient(90deg, rgba(255,196,0,1), rgba(255,0,0,1));
+    animation: decor-slide 3.5s linear infinite;
+    z-index:2;
+}
+
+/* Elemento usado apenas para impressão: força uma página em branco
+   antes do próximo conteúdo quando necessário (ex.: posicionar BEBIDAS na página 5) */
+.page-spacer{ display:none; }
+
+p.lead{
+    margin:6px 0 0;
+    color:var(--muted);
+    font-size:1.15em;
+    opacity:0.95;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+    gap:20px;
+    padding:2px
+}
+
+.section-title {
+    width: 100%;
+    text-align: center;
+    color: var(--titulo-cor);
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2.1em;
+    margin: 0.6em 0 0.4em; /* mais compacta para aproximar do header */
+    grid-column: 1 / -1;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.45);
+}
+
+.card{
+    background:var(--card);
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 6px 18px rgba(0,0,0,0.3);
+    display:flex;
+    flex-direction:column;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.thumb{
+    height:240px;
+    background-size:cover;
+    background-position:center;
+    position:relative
+}
+
+.title-overlay{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    color:#fff;
+    font-family: 'Bebas Neue', cursive;
+    font-weight:700;
+    font-size: 1.3em;
+    text-shadow:0 4px 12px rgba(0,0,0,0.45);
+    background:linear-gradient(transparent, rgba(0,0,0,0.8));
+    padding:15px;
+}
+
+.card-body{
+    padding:15px;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between
+}
+
+.desc{
+    font-size:15px;
+    color:var(--muted);
+    line-height:1.4;
+    margin:0 0 15px
+}
+
+.price-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:10px
+}
+
+.price{
+    background-color:var(--preco-fundo);
+    color:var(--bg);
+    padding:5px 10px;
+    border-radius:4px;
+    font-weight:700;
+    font-size:20px
+}
+
+.small{
+    font-size:14px;
+    color:var(--muted)
+}
+
+.price-box{background:#fff;padding:8px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,0.06);display:flex;align-items:center}
+
+.cart-bar{position:sticky;bottom:12px;margin-top:18px;display:flex;align-items:center;justify-content:space-between;background:transparent}
+.cart-summary{display:flex;align-items:center;gap:12px}
+.cart-btn{background:var(--accent);color:#fff;padding:12px 18px;border-radius:28px;font-weight:700;box-shadow:0 8px 24px rgba(255,90,60,0.18);border:none}
+.cart-card{background:#fff;padding:10px;border-radius:12px;display:flex;gap:10px;align-items:center;box-shadow:0 6px 18px rgba(10,10,10,0.06)}
+
+@media (max-width:420px){
+  .app{padding:12px}
+  .thumb{height:110px}
+  .grid{grid-template-columns:1fr 1fr}
+}
+
+@media (max-width:360px){
+  .grid{grid-template-columns:1fr}
+}
+
+.badge{font-size:12px;color:var(--muted)}
+
+/* Keyframes for header animations */
+@keyframes header-pan{
+    0%{ transform: translateX(0) }
+    50%{ transform: translateX(6%) }
+    100%{ transform: translateX(0) }
+}
+
+@keyframes ribbon-slow{
+    0%{ transform: rotate(-8deg) translateX(0) }
+    50%{ transform: rotate(-8deg) translateX(6%) }
+    100%{ transform: rotate(-8deg) translateX(0) }
+}
+
+@keyframes logo-float{
+    0%{ transform: translateY(0) }
+    50%{ transform: translateY(-6px) }
+    100%{ transform: translateY(0) }
+}
+
+@keyframes title-glow{
+    0%{ text-shadow: 0 6px 12px rgba(0,0,0,0.6), 0 0 0 rgba(255,196,0,0) }
+    100%{ text-shadow: 0 10px 28px rgba(0,0,0,0.7), 0 0 18px rgba(255,196,0,0.12) }
+}
+
+@keyframes decor-slide{
+    0%{ transform: translateX(-10%) }
+    50%{ transform: translateX(10%) }
+    100%{ transform: translateX(-10%) }
+}
+
+/* Regras específicas para impressão em A4 */
+@page { size: A4 portrait; margin: 10mm; }
+
+@media print {
+    /* Base da página: manter aparência da web */
+    html, body { 
+        width: 21cm; 
+        height: 29.7cm; 
+        margin: 0; 
+        background: var(--bg); 
+        color: var(--muted); 
+        font-size: 11pt;
+    }
+
+    /* Container principal: manter margem/padding da web */
+    .app { 
+        width: 19.7cm;
+        max-width: 19.7cm; 
+        margin: 0 auto; 
+        padding: 10mm;
+        background-color: var(--bg);
+        /* Mostrar fundo se permitido no print settings */
+        background-image: linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url('imagem/fundo.png');
+        background-size: cover;
+        background-position: center top;
+        background-repeat: no-repeat;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    /* Header: manter estilo da web */
+    header { 
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+        padding: 36px 20px;
+        background: linear-gradient(135deg, rgba(255,0,0,0.06) 0%, rgba(255,196,0,0.04) 50%, rgba(0,0,0,0.35) 100%);
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.32);
+        page-break-after: avoid;
+        page-break-inside: avoid;
+    }
+    
+    header::before, header::after {
+        /* esconder decorações posicionadas que podem invadir a próxima página */
+        display: none !important;
+        animation: none !important;
+        opacity: 0 !important;
+    }
+    
+    h1 { 
+        margin: 0;
+        font-family: 'Bebas Neue', cursive;
+        font-size: 3.2em;
+        color: var(--titulo-cor);
+    }
+    
+    p.lead {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 2.5em;
+        opacity: 0.95;
+    }
+    /* esconder a faixa decorativa do header na impressão para evitar sobreposição */
+    .header-decor { display: none !important; }
+
+    /* Grid: manter layout responsivo da web (será 1-2 colunas dependendo do espaço) */
+    .grid { 
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 12px;
+        padding: 2px;
+    }
+
+    /* Títulos de seção: manter estilo da web */
+    .section-title { 
+        width: 100%;
+        text-align: center;
+        color: var(--titulo-cor);
+        font-family: 'Bebas Neue', cursive;
+        font-size: 2.7em;
+        margin: 0.6em 0 0.4em;
+        grid-column: 1 / -1;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.45);
+        page-break-after: avoid;
+        page-break-inside: avoid;
+    }
+
+    /* Permitir que seções preencham páginas seguintes quando houver espaço disponível.
+       Não forçar quebra antes dos títulos; conservar quebras naturais e evitar
+       quebra dentro de cards. */
+    .section-title.page-break {
+        /* Não forçar quebra de página; permitir que a seção flua para a próxima página
+           se houver espaço disponível na página anterior. */
+        page-break-before: avoid;
+        break-before: auto;
+    }
+
+    /* Cards: manter estilo exato da web */
+    .card { 
+        background: var(--card);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+        display: flex;
+        flex-direction: column;
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    /* Thumbnails: manter altura da web (240px agora mais quadrado) */
+    .thumb { 
+        height: 240px;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+
+    /* Overlay do título: manter estilo da web */
+    .title-overlay { 
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        color: #fff;
+        font-family: 'Bebas Neue', cursive;
+        font-weight: 700;
+        font-size: 2em;
+        text-shadow: 0 4px 12px rgba(0,0,0,0.45);
+        background: linear-gradient(transparent, rgba(0,0,0,0.8));
+        padding: 15px;
+    }
+
+    /* Corpo do card: manter estilo da web */
+    .card-body { 
+        padding: 15px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    /* Descrição: manter estilo da web */
+    .desc { 
+        font-size: 15px;
+        color: var(--muted);
+        line-height: 1.4;
+        margin: 0 0 15px;
+    }
+
+    /* Preços: manter estilo da web */
+    .price-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+
+    .price { 
+        background-color: var(--preco-fundo);
+        color: var(--bg);
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-weight: 700;
+        font-size: 20px;
+    }
+
+    .small { 
+        font-size: 14px;
+        color: var(--muted);
+    }
+
+    /* Remover elementos não-impressáveis */
+    .cart-bar, .cart-summary, .cart-btn, .cart-card {
+        display: none;
+    }
+
+    /* Forçar cores e imagens exatas na impressão */
+    * { 
+        -webkit-print-color-adjust: exact; 
+        print-color-adjust: exact;
+    }
+
+    /* Mostrar espaçador de página no print para forçar página em branco */
+    .page-spacer{
+        display:block !important;
+        page-break-after: always;
+        height: 0;
+        visibility: hidden;
+    }
+}
